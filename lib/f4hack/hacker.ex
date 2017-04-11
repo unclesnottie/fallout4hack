@@ -8,7 +8,14 @@ defmodule F4Hack.Hacker do
     input
       |> String.upcase
       |> String.split
+  end
+
+  def calculate_all_likenesses(words) do
+    new_words = words
       |> Enum.map(&String.graphemes/1)
+
+      new_words
+      |> Enum.map(&calculate_likenesses(&1, new_words))
   end
 
   def calculate_likenesses(word, words) do
@@ -18,6 +25,12 @@ defmodule F4Hack.Hacker do
         likeness = calculate_likeness(x, word)
         value = [Enum.join(x)]
         Map.update(acc, likeness, value, &(&1 ++ value))
+      end)
+
+    likenesses = likenesses
+      |> Map.keys
+      |> Enum.reduce(%{}, fn key, acc ->
+        Map.put(acc, key, calculate_all_likenesses(likenesses[key]))
       end)
 
     {Enum.join(word), likenesses}

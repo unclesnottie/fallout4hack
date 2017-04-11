@@ -6,19 +6,18 @@ defmodule F4Hack.HackerTest do
 
   describe "Hacker.process_input/1" do
     test "splits into list of lists" do
-      expected = [["H","E","L","L","O"], ["F","O","O","L","S"], ["B","O","O","K","S"]]
+      expected = ["HELLO", "FOOLS", "BOOKS"]
       actual = "HELLO FOOLS BOOKS"
         |> Hacker.process_input
-      assert actual == expected
+      assert expected == actual
     end
 
     test "uppercases each letter" do
       actual ="hello FOOLS bOOkS"
         |> Hacker.process_input
-        |> List.flatten
         |> Enum.join
       expected = String.upcase(actual)
-      assert actual == expected
+      assert expected == actual
     end
   end
 
@@ -28,49 +27,67 @@ defmodule F4Hack.HackerTest do
       word = ["B","O","O","K","S"]
       expected = {"BOOKS", %{}}
       actual = Hacker.calculate_likenesses(word, words)
-      assert actual == expected
+      assert expected == actual
     end
 
     test "calculates correctly when same letters are in different places" do
       words = [["P","O","R","T","S"]]
       word = ["S","P","O","R","T"]
-      expected = {"SPORT", %{ 0 => ["PORTS"] }}
+      expected = {"SPORT", %{ 0 => [{"PORTS", %{}}] }}
       actual = Hacker.calculate_likenesses(word, words)
-      assert actual == expected
+      assert expected == actual
     end
 
     test "calculates likeness correctly, no two words have same likeness" do
       words = [["B","O","O","K","S"], ["F","O","O","L","S"], ["E","M","A","I","L"], ["S","T","O","C","K"]]
       word = ["B","O","O","K","S"]
-      expected = {"BOOKS", %{ 0 => ["EMAIL"], 1 => ["STOCK"], 3 => ["FOOLS"] }}
+      expected = {"BOOKS", %{ 0 => [{"EMAIL", %{}}], 1 => [{"STOCK", %{}}], 3 => [{"FOOLS", %{}}] }}
       actual = Hacker.calculate_likenesses(word, words)
-      assert actual == expected
+      assert expected == actual
     end
 
     test "calculates likeness correctly, two words have same likeness" do
       words = [["B","O","O","K","S"], ["F","O","O","L","S"], ["P","O","O","L","S"], ["B","O","X","E","S"]]
       word = ["B","O","O","K","S"]
-      expected = {"BOOKS", %{ 3 => ["FOOLS", "POOLS", "BOXES"] }}
+      expected = {"BOOKS", %{
+        3 => [
+          {"FOOLS", %{
+            2 => [{"BOXES", %{}}],
+            4 => [{"POOLS", %{}}]
+          }},
+          {"POOLS", %{
+            2 => [{"BOXES", %{}}],
+            4 => [{"FOOLS", %{}}]
+          }},
+          {"BOXES", %{
+            2 => [{"FOOLS", %{
+              4 => [{"POOLS", %{}}]
+            }}, {"POOLS", %{
+              4 => [{"FOOLS", %{}}]
+            }}]
+          }}
+        ]
+      }}
       actual = Hacker.calculate_likenesses(word, words)
-      assert actual == expected
+      assert expected == actual
     end
   end
 
   describe "Hacker.calculate_likeness/2" do
     test "returns zero when no letters match" do
-      assert Hacker.calculate_likeness(["M","A","I","N"], ["O","B","O","E"]) == 0
+      assert 0 == Hacker.calculate_likeness(["M","A","I","N"], ["O","B","O","E"])
     end
 
     test "returns zero when letters match but are out of order" do
-      assert Hacker.calculate_likeness(["P","O","R","T","S"], ["S","P","O","R","T"]) == 0
+      assert 0 == Hacker.calculate_likeness(["P","O","R","T","S"], ["S","P","O","R","T"])
     end
 
     test "returns 1 when a letter matches" do
-      assert Hacker.calculate_likeness(["B","A","R","N"], ["B","O","O","K"]) == 1
+      assert 1 == Hacker.calculate_likeness(["B","A","R","N"], ["B","O","O","K"])
     end
 
     test "returns correct count when more than one letters match" do
-      assert Hacker.calculate_likeness(["B","O","O","K","S"], ["F","O","O","L","S"]) == 3
+      assert 3 == Hacker.calculate_likeness(["B","O","O","K","S"], ["F","O","O","L","S"])
     end
   end
 

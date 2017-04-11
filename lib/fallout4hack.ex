@@ -10,7 +10,7 @@ defmodule F4Hack do
       |> Hacker.process_input
 
     likenesses = words
-      |> Enum.map(&Hacker.calculate_likenesses(&1, words))
+      |> Hacker.calculate_all_likenesses
 
     likenesses
       |> IO.inspect
