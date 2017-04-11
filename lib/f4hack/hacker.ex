@@ -14,15 +14,23 @@ defmodule F4Hack.Hacker do
   def calculate_likenesses(word, words) do
     likenesses = words
       |> Stream.filter(&(&1 != word))
-      |> Stream.map(&({Enum.join(&1), calculate_likeness(&1, word)}))
-      |> Enum.to_list
+      |> Enum.reduce(%{}, fn x, acc ->
+        likeness = calculate_likeness(x, word)
+        case acc[likeness] do
+          nil ->
+            Map.put(acc, likeness, [Enum.join(x)])
+
+          arr ->
+            %{acc | likeness => arr ++ [Enum.join(x)]}
+        end
+      end)
 
     {Enum.join(word), likenesses}
   end
 
   def calculate_likeness(a, b) do
     Enum.zip(a, b)
-      |> Enum.filter(fn({a, b}) -> a == b end)
+      |> Enum.filter(fn {a, b} -> a == b end)
       |> Enum.count
   end
 end

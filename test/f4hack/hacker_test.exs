@@ -26,7 +26,7 @@ defmodule F4Hack.HackerTest do
     test "removes the word itself" do
       words = [["B","O","O","K","S"]]
       word = ["B","O","O","K","S"]
-      expected = {"BOOKS", []}
+      expected = {"BOOKS", %{}}
       actual = Hacker.calculate_likenesses(word, words)
       assert actual == expected
     end
@@ -34,15 +34,23 @@ defmodule F4Hack.HackerTest do
     test "calculates correctly when same letters are in different places" do
       words = [["P","O","R","T","S"]]
       word = ["S","P","O","R","T"]
-      expected = {"SPORT", [{"PORTS", 0}]}
+      expected = {"SPORT", %{ 0 => ["PORTS"] }}
       actual = Hacker.calculate_likenesses(word, words)
       assert actual == expected
     end
 
-    test "calculates likeness correctly" do
+    test "calculates likeness correctly, no two words have same likeness" do
       words = [["B","O","O","K","S"], ["F","O","O","L","S"], ["E","M","A","I","L"], ["S","T","O","C","K"]]
       word = ["B","O","O","K","S"]
-      expected = {"BOOKS", [{"FOOLS", 3}, {"EMAIL", 0}, {"STOCK", 1}]}
+      expected = {"BOOKS", %{ 0 => ["EMAIL"], 1 => ["STOCK"], 3 => ["FOOLS"] }}
+      actual = Hacker.calculate_likenesses(word, words)
+      assert actual == expected
+    end
+
+    test "calculates likeness correctly, two words have same likeness" do
+      words = [["B","O","O","K","S"], ["F","O","O","L","S"], ["P","O","O","L","S"], ["B","O","X","E","S"]]
+      word = ["B","O","O","K","S"]
+      expected = {"BOOKS", %{ 3 => ["FOOLS", "POOLS", "BOXES"] }}
       actual = Hacker.calculate_likenesses(word, words)
       assert actual == expected
     end
