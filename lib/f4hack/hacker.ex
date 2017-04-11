@@ -16,13 +16,8 @@ defmodule F4Hack.Hacker do
       |> Stream.filter(&(&1 != word))
       |> Enum.reduce(%{}, fn x, acc ->
         likeness = calculate_likeness(x, word)
-        case acc[likeness] do
-          nil ->
-            Map.put(acc, likeness, [Enum.join(x)])
-
-          arr ->
-            %{acc | likeness => arr ++ [Enum.join(x)]}
-        end
+        value = [Enum.join(x)]
+        Map.update(acc, likeness, value, &(&1 ++ value))
       end)
 
     {Enum.join(word), likenesses}
@@ -33,4 +28,5 @@ defmodule F4Hack.Hacker do
       |> Enum.filter(fn {a, b} -> a == b end)
       |> Enum.count
   end
+
 end
