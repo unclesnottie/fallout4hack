@@ -42,4 +42,41 @@ defmodule F4Hack.Hacker do
       |> Enum.count
   end
 
+  def max_depth({_, map}) when map == %{}, do: 1
+  def max_depth({_, map}) do
+    depth = map
+      |> Map.keys
+      |> Enum.map(fn key ->
+        map[key]
+          |> Enum.map(fn m ->
+            max_depth(m)
+          end)
+          |> Enum.max
+        end)
+      |> Enum.max
+
+    depth + 1
+  end
+
+  def make_best_guess(likenesses) do
+    {best_guess, _} = likenesses
+      |> Enum.map(fn {word, _} = likeness ->
+        {word, max_depth(likeness)}
+      end)
+      |> Enum.sort(fn {_, a}, {_, b} -> a <= b end)
+      |> hd
+    best_guess
+  end
+
+  def make_guess(likenesses, guess) do
+    {_, map} = likenesses
+      |> Enum.find(fn {word, _} -> word == guess end)
+    map
+  end
+
+  def get_remaining_words(map, likeness) do
+    map[likeness]
+      |> Enum.map(fn {word, _} -> word end)
+      |> Enum.join(", ")
+  end
 end

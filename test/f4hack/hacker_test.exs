@@ -91,4 +91,44 @@ defmodule F4Hack.HackerTest do
     end
   end
 
+  describe "Hacker.max_depth/1" do
+    test "returns one when map is empty" do
+      likenesses = {"BOOKS", %{}}
+      assert 1 == Hacker.max_depth(likenesses)
+    end
+
+    test "returns two when there are two words with likeness of zero" do
+      likenesses = {"SPORT", %{ 0 => [{"PORTS", %{}}] }}
+      assert 2 == Hacker.max_depth(likenesses)
+    end
+
+    test "returns correct depth when depth is greater than two" do
+      likenesses = {"SPORT", %{ 0 => [{"PORTS", %{ 0 => [{"ALIVE", %{}}]}}, {"ALIVE", %{ 0 => [{"PORTS", %{}}]}}] }}
+      assert 3 == Hacker.max_depth(likenesses)
+    end
+
+    test "returns correct depth when multiple paths" do
+      likenesses = {"BOOKS", %{
+        3 => [
+          {"FOOLS", %{
+            2 => [{"BOXES", %{}}],
+            4 => [{"POOLS", %{}}]
+          }},
+          {"POOLS", %{
+            2 => [{"BOXES", %{}}],
+            4 => [{"FOOLS", %{}}]
+          }},
+          {"BOXES", %{
+            2 => [{"FOOLS", %{
+              4 => [{"POOLS", %{}}]
+            }}, {"POOLS", %{
+              4 => [{"FOOLS", %{}}]
+            }}]
+          }}
+        ]
+      }}
+      assert 4 == Hacker.max_depth(likenesses)
+    end
+  end
+
 end
