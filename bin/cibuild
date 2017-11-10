@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+#
+# CiBuild Script
+#
+# bin/cibuild:  Setup environment for CI to run tests.
+
+set -e
+
+cd "$(dirname "$0")/.."
+
+echo "Tests started at…"
+date "+%H:%M:%S"
+
+export MIX_ENV="test"
+
+# run tests
+echo "Running tests …"
+date "+%H:%M:%S"
+
+# run tests.
+bin/test

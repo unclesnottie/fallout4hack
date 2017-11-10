@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+#
+# Setup Script
+#
+# bin/setup:  Setup application for the first time after cloning, or set it
+#          back to the initial first unused state.
+
+set -e
+
+cd "$(dirname "$0")/.."
+
+bin/bootstrap
+
+# Setup the DB
+#echo "==> Setting up the DB..."
+
+# Reset DB to a fresh state.
+#mix ecto.reset
+
+echo "==> App is now ready to go!"

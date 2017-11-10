@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+#
+# Update Script
+#
+# bin/update:  Update application to run for its current checkout.
+
+set -e
+
+cd "$(dirname "$0")/.."
+
+bin/bootstrap
+
+# Update the DB
+#echo "==> Updating the DB..."
+
+# Update DB.
+#mix ecto.migrate

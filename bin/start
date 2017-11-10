@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+#
+# Start Script
+#
+# bin/start:  Launch the application and any extra required processes locally.
+
+set -e
+
+cd "$(dirname "$0")/.."
+
+# Ensure everything in the app is up to date.
+bin/update
+
+echo "Running application..."
+echo ""
+
+# Run the main function
+mix run -e "F4Hack.main(true)"

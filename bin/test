@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+#
+# Test Script
+#
+# bin/test:  Run test suite for application. Optionally pass in a path to an
+#         individual test file to run a single test.
+
+set -e
+
+cd "$(dirname "$0")/.."
+
+[ -z "$DEBUG" ] || set -x
+
+if [ "$MIX_ENV" = "test" ]; then
+  # Ensure everything in the app is up to date.
+  bin/update
+else
+  export MIX_ENV="test"
+  # Ensure everything in the app is up to date.
+  bin/update
+fi
+
+echo "==> Running tests…"
+
+if [ -n "$1" ]; then
+  # pass arguments to test call.
+  mix test "$1"
+else
+  mix test
+fi

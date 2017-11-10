@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+#
+# Console Script
+#
+# bin/console:  Launch a console for the application.
+
+set -e
+
+cd "$(dirname "$0")/.."
+
+# Ensure everything in the app is up to date.
+bin/update
+
+# Run IEx console
+iex -S mix

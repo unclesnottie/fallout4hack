@@ -1,0 +1,66 @@
+#!/usr/bin/env bash
+#
+# Bootstrap Script
+#
+# bin/bootstrap:  Resolve all dependencies the application requires to run.
+
+set -e
+
+MISSING=0
+RED='\033[0;31m'
+#GREEN='\033[0;32m'
+NC='\033[0m' # No Color
+
+cd "$(dirname "$0")/.."
+
+# Ensure Homebrew dependencies are installed if using a Brewfile
+if [ -f "Brewfile" ] && [ "$(uname -s)" = "Darwin" ]; then
+  brew bundle check >/dev/null 2>&1 || {
+    echo "==> Installing Homebrew dependencies..."
+    brew bundle
+  }
+fi
+
+# Ensure Elixir is installed
+command -v elixir >/dev/null 2>&1 || {
+  echo -e "${RED}This app requires Elixir, but it was not found on your system.${NC}"
+  echo -e "${RED}Install it using the instructions at http://elixir-lang.org${NC}"
+  echo ""
+  MISSING=$((MISSING + 1))
+}
+
+# Ensure Node.js is installed if this is a phoenix application
+if [ -f "package.json" ]; then
+  # Ensure Node.js is installed
+  command -v npm >/dev/null 2>&1 || {
+    echo -e "${RED}This app requires Node.js to build assets, but it was not found on your system.${NC}"
+    echo -e "${RED}Install it using the instructions at http://nodejs.org${NC}"
+    echo ""
+    MISSING=$((MISSING + 1))
+  }
+fi
+
+if [ $MISSING -gt 0 ]
+then
+  exit 1
+fi
+
+if [ -f "mix.exs" ]; then
+  # Ensure Hex is installed
+  command -v mix hex >/dev/null 2>&1 || {
+    mix local.hex --force
+  }
+
+  # Ensure Rebar is installed
+  if [ ! -f "$HOME/.mix/rebar3" ]; then
+    mix local.rebar --force
+  fi
+
+  # Install Mix dependencies
+  mix deps.get || { echo -e "${RED}Mix dependencies could not be installed!${NC}"; exit 1; }
+
+fi
+
+if [ -f "package.json" ]; then
+  npm install || { echo -e "${RED}Node dependencies could not be installed!${NC}"; exit 1; }
+fi
