@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 #
-# Start Script
+# Run Script
 #
-# bin/start:  Launch the application and any extra required processes locally.
+# bin/run:  Launch the application and any extra required processes locally.
 
 set -e
 

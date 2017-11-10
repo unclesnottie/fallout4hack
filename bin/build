@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+#
+# Build Script
+#
+# bin/build: Build the escript file for this application. 
+
+set -e
+
+cd "$(dirname "$0")/.."
+
+# Ensure everything in the app is up to date.
+bin/update
+
+echo "Buiding application..."
+
+# Run the main function
+mix escript.build
+ 
