@@ -6,8 +6,12 @@ defmodule F4Hack.HackerV2 do
 
   ## Client API
 
-  def start_link(words) do
-    GenServer.start_link(__MODULE__, words, [])
+  def start_link() do
+    GenServer.start_link(__MODULE__, :ok, [])
+  end
+
+  def set_words(pid, words) do
+    GenServer.call(pid, {:words, words})
   end
 
   def get_guess(pid) do
@@ -20,7 +24,11 @@ defmodule F4Hack.HackerV2 do
 
   ## Callbacks
 
-  def init(words) do
+  def init(:ok) do
+    {:ok, %{tries: 0, guess: nil, words: [], length: 0}}
+  end
+
+  def handle_call({:words, words}, _from, state) do
     word_list = words
     |> String.upcase
     |> String.split
@@ -29,7 +37,11 @@ defmodule F4Hack.HackerV2 do
     |> hd
     |> String.length
 
-    {:ok, %{tries: 0, guess: nil, words: word_list, length: word_length}}
+    if Enum.all?(word_list, fn(w) -> String.length(w) == word_length end) do
+      {:reply, :ok, %{tries: 0, guess: nil, words: word_list, length: word_length}}
+    else
+      {:stop, :normal, {:error, "Words must be same length"}, state}
+    end
   end
 
   def handle_call(:guess, _from, state = %{tries: 4}) do
@@ -50,11 +62,7 @@ defmodule F4Hack.HackerV2 do
     {:reply, {:guess, guess}, state}
   end
 
-  def handle_call(:likeness, _from, state = %{words: [password]}) do
-    reply_password(password, state)
-  end
-
-  def handle_call({:likeness, likeness}, _from, state = %{guess: password, length: likeness}) do
+  def handle_call({:likeness, likeness}, _from, state = %{guess: password, length: length}) when likeness >= length do
     reply_password(password, state)
   end
 
