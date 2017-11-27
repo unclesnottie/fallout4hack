@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+#
+# Test Watch Script
+#
+# bin/watch:  Run tests continuously on file change.
+
+set -e
+
+cd "$(dirname "$0")/.."
+
+[ -z "$DEBUG" ] || set -x
+
+# Ensure everything in the app is up to date.
+bin/update
+
+echo "==> Running tests…"
+mix test.watch
