@@ -2,7 +2,6 @@ defmodule F4Hack.Hacker do
   @moduledoc """
   Documentation for F4Hack.Hacker.
   """
-  alias F4Hack.Hacker.Server
 
   ## Client API
 
