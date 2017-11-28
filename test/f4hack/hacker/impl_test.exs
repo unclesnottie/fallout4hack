@@ -3,12 +3,7 @@ defmodule F4Hack.Hacker.ImplTest do
   doctest F4Hack.Hacker.Impl
 
   alias F4Hack.Hacker.Impl
-
-  describe "Impl.initialize_state/0" do
-    test "returns an empty state" do
-      assert Impl.initialize_state() == %{tries: 0, guess: nil, password: nil, words: [], length: 0}
-    end
-  end
+  alias F4Hack.Hacker.Attempt
 
   describe "Impl.initialize_word_list/1" do
     test "returns error when words have unequal length" do
@@ -16,7 +11,7 @@ defmodule F4Hack.Hacker.ImplTest do
     end
 
     test "returns remaining words when words have equal length" do
-      expected = {:ok, %{tries: 0, guess: nil, password: nil, words: ["HELLO", "HOWDY"], length: 5}}
+      expected = {:ok, %Attempt{tries: 0, guess: nil, password: nil, words: ["HELLO", "HOWDY"], length: 5}}
       assert Impl.initialize_word_list("hello howdy") == expected
     end
   end

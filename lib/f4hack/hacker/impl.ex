@@ -3,9 +3,7 @@ defmodule F4Hack.Hacker.Impl do
   Documentation for F4Hack.Hacker.Impl.
   """
 
-  def initialize_state() do
-    %{tries: 0, guess: nil, password: nil, words: [], length: 0}
-  end
+  alias F4Hack.Hacker.Attempt
 
   def initialize_word_list(words) do
     word_list = words
@@ -17,35 +15,35 @@ defmodule F4Hack.Hacker.Impl do
     |> String.length
 
     if Enum.all?(word_list, fn(w) -> String.length(w) == word_length end) do
-      {:ok, %{tries: 0, guess: nil, password: nil, words: word_list, length: word_length}}
+      {:ok, %Attempt{words: word_list, length: word_length}}
     else
       {:error, :unequal_length}
     end
   end
 
-  def get_guess(state = %{words: [password]}) do
+  def get_guess(state = %Attempt{words: [password]}) do
     %{state | guess: password, password: password}
   end
 
-  def get_guess(state = %{guess: nil, words: word_list}) do
+  def get_guess(state = %Attempt{guess: nil, words: word_list}) do
     best_guess = best_guess(word_list)
     new_word_list = word_list -- [best_guess]
     %{state | guess: best_guess, words: new_word_list}
   end
 
-  def get_guess(state = %{guess: _guess}) do
+  def get_guess(state = %Attempt{guess: _guess}) do
     state
   end
 
-  def set_likeness(state = %{tries: 4}, _) do
+  def set_likeness(%Attempt{tries: 4}, _) do
     {:error, :out_of_tries}
   end
 
-  def set_likeness(state = %{guess: password, length: length}, likeness) when likeness >= length do
+  def set_likeness(state = %Attempt{guess: password, length: length}, likeness) when likeness >= length do
     %{state | password: password}
   end
 
-  def set_likeness(state = %{tries: tries, guess: guess, words: word_list}, likeness) do
+  def set_likeness(state = %Attempt{tries: tries, guess: guess, words: word_list}, likeness) do
     new_word_list = word_list
     |> Enum.filter(fn w ->
       likeness == calc_likeness(w, guess)
