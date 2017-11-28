@@ -8,7 +8,7 @@ defmodule FalloutHacker.Core.Impl do
   def initialize_word_list(words) do
     word_list = words
     |> String.upcase
-    |> String.split
+    |> String.split(~r/\W+/, trim: true)
 
     word_length = word_list
     |> hd
