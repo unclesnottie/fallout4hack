@@ -14,6 +14,11 @@ defmodule FalloutHacker.Core.ImplTest do
       expected = {:ok, %Attempt{tries: 0, guess: nil, password: nil, words: ["HELLO", "HOWDY"], length: 5}}
       assert Impl.initialize_word_list("hello howdy") == expected
     end
+
+    test "splits on all non-word characters" do
+      expected = {:ok, %Attempt{tries: 0, guess: nil, password: nil, words: ["A", "B"], length: 1}}
+      assert Impl.initialize_word_list("a~`!@#$%^&*()-+=[]{}|\\:;'\"?/,.<>b") == expected
+    end
   end
 
   describe "Impl.get_guess/1" do
