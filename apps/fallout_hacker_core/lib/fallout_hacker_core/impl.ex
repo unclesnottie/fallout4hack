@@ -50,6 +50,8 @@ defmodule FalloutHacker.Core.Impl do
     end)
 
     case length(new_word_list) do
+      0 ->
+        {:error, :no_matching_likeness}
       1 ->
         %{state | password: hd(new_word_list)}
 

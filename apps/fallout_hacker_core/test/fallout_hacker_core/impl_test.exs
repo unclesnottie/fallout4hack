@@ -70,6 +70,12 @@ defmodule FalloutHacker.Core.ImplTest do
       state = Impl.get_guess(state)
       assert Impl.set_likeness(state, 1) == %{state | words: ["HOWDY", "HAUNT"], guess: nil, tries: 1}
     end
+
+    test "set likeness to a score that does not exist" do
+      {:ok, state} = Impl.initialize_word_list("foo bar baz")
+      state = Impl.get_guess(state)
+      assert Impl.set_likeness(state, 1) == {:error, :no_matching_likeness}
+    end
   end
 
 end

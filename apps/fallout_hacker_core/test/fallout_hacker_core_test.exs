@@ -9,13 +9,13 @@ defmodule FalloutHacker.CoreTest do
     %{pid: pid}
   end
 
-  describe "Hacker.start_link/0" do
+  describe "Core.start_link/0" do
     test "starts a new process", %{pid: pid} do
       assert Process.alive?(pid)
     end
   end
 
-  describe "Hacker.set_words/2" do
+  describe "Core.set_words/2" do
     test "returns error when words have unequal length", %{pid: pid} do
       assert Core.set_words(pid, "hello hi") == {:error, :unequal_length}
     end
@@ -25,10 +25,18 @@ defmodule FalloutHacker.CoreTest do
     end
   end
 
-  describe "Hacker.get_guess/1" do
+  describe "Core.get_guess/1" do
     test "returns password when only one possible word", %{pid: pid} do
       Core.set_words(pid, "hello")
       assert Core.get_guess(pid) == {:password, "HELLO"}
+    end
+  end
+
+  describe "Core.set_likeness/2" do
+    test "returns an error when no words match likeness", %{pid: pid} do
+      Core.set_words(pid, "foo bar baz")
+      Core.get_guess(pid)
+      assert Core.set_likeness(pid, 1) == {:error, :no_matching_likeness}
     end
   end
 end

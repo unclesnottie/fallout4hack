@@ -17,7 +17,7 @@ defmodule FalloutHacker.Core.Server do
         reply_remaining_words(new_state)
 
       {:error, reason} ->
-        reply_error(state, reason)
+        exit_error(state, reason)
     end
   end
 
@@ -33,8 +33,11 @@ defmodule FalloutHacker.Core.Server do
 
   def handle_call({:likeness, likeness}, _from, state = %Attempt{}) do
     case Impl.set_likeness(state, likeness) do
+      {:error, :no_matching_likeness} ->
+        reply_error(state, :no_matching_likeness)
+
       {:error, reason} ->
-        reply_error(state, reason)
+        exit_error(state, reason)
 
       new_state = %{password: nil} ->
         reply_remaining_words(new_state)
@@ -51,6 +54,10 @@ defmodule FalloutHacker.Core.Server do
   end
 
   defp reply_error(state, reason) do
+    {:reply, {:error, reason}, state}
+  end
+
+  defp exit_error(state, reason) do
     {:stop, :normal, {:error, reason}, state}
   end
 

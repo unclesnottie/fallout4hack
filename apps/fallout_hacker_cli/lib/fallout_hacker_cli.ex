@@ -29,6 +29,10 @@ defmodule FalloutHacker.CLI do
         {:error, :out_of_tries} ->
           IO.puts("You ran out of tries.")
 
+        {:error, :no_matching_likeness} ->
+          IO.puts("No words have that likeness")
+          hack_password(pid)
+
         {:password, password} ->
           IO.puts("The password is \"#{password}\".")
 
