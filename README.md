@@ -6,7 +6,7 @@ in the Fallout game series.
 This mini-game essentially gives you a list of possible passwords and four tries
 to guess the password. An incorrect guess will give  likeness score which is the
 number of characters that match. If all four tries get used, the terminal becomes
-locked permanently.  I highly recommend you quicksave before hacking.
+locked permanently.  I highly recommend you quick save before hacking.
 
 This application allows you to enter all the passwords separated by spaces.
 It will show an error if the words are not all the same length.  If they are the
@@ -27,13 +27,15 @@ is found.
 ## The Algorithm
 
 The algorithm for finding a password is pretty basic.   Each word is given a
-score by calculating the likeness with all words in the list. The score is the
-number of unique likenesses.  For example, the above would result in: `FOO=2,
-BAR=3, BAZ=3`. The "best" guess returned is the result with the highest score.
+score by calculating the likeness with all words in the list. For example, `FOO`
+would get scores of `[3, 0, 0]`. The final score for a word is the number of
+unique likenesses.  `FOO` has the unique likenesses of `[3, 0]` or a score of `2`.
+The final scores for each word would be: `FOO=2, BAR=3, BAZ=3`. The "best" guess
+returned is the result with the highest score.
 
 Once a likeness is provided, the list of possible passwords gets filtered and the
 password or a new "best" guess is returned.  
 
 I put "best" in quotes because there are better algorithms to use but this one is
-simple and generally works.  Upgrade your hacking perk and remember to quicksave
+simple and generally works.  Upgrade your hacking perk and remember to quick save
 and this should work just fine.
