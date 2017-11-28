@@ -15,4 +15,10 @@ echo "Running application..."
 echo ""
 
 # Run the main function
-mix run -e "F4Hack.main(true)"
+case "$1" in
+CLI|cli|"")
+  mix run -e "F4Hack.main(true)"
+  ;;
+*)
+  echo "Unrecognized command: $1"
+esac
