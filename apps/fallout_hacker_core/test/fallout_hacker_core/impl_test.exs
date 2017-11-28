@@ -1,9 +1,9 @@
-defmodule F4Hack.Hacker.ImplTest do
+defmodule FalloutHacker.Core.ImplTest do
   use ExUnit.Case, async: true
-  doctest F4Hack.Hacker.Impl
+  doctest FalloutHacker.Core.Impl
 
-  alias F4Hack.Hacker.Impl
-  alias F4Hack.Hacker.Attempt
+  alias FalloutHacker.Core.Impl
+  alias FalloutHacker.Core.Attempt
 
   describe "Impl.initialize_word_list/1" do
     test "returns error when words have unequal length" do

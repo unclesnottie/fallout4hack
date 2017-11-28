@@ -1,12 +1,12 @@
-defmodule F4Hack.Hacker do
+defmodule FalloutHacker.Core do
   @moduledoc """
-  Documentation for F4Hack.Hacker.
+  Documentation for FalloutHacker.Core.
   """
 
   ## Client API
 
   def new() do
-    {:ok, pid} = GenServer.start_link(F4Hack.Hacker.Server, :ok, [])
+    {:ok, pid} = GenServer.start_link(FalloutHacker.Core.Server, :ok, [])
     pid
   end
 

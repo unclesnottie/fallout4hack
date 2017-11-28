@@ -1,11 +1,11 @@
-defmodule F4Hack.Hacker.Server do
+defmodule FalloutHacker.Core.Server do
   @moduledoc """
-  Documentation for F4Hack.Hacker.Server.
+  Documentation for FalloutHacker.Core.Server.
   """
 
   use GenServer
-  alias F4Hack.Hacker.Impl
-  alias F4Hack.Hacker.Attempt
+  alias FalloutHacker.Core.Impl
+  alias FalloutHacker.Core.Attempt
 
   def init(:ok) do
     {:ok, %Attempt{}}

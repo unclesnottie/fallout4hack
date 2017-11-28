@@ -17,7 +17,7 @@ echo ""
 # Run the main function
 case "$1" in
 CLI|cli|"")
-  mix run -e "F4Hack.main(true)"
+  mix run -e "FalloutHacker.CLI.main(true)"
   ;;
 *)
   echo "Unrecognized command: $1"

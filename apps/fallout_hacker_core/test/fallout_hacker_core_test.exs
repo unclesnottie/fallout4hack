@@ -1,11 +1,11 @@
-defmodule F4Hack.HackerTest do
+defmodule FalloutHacker.CoreTest do
   use ExUnit.Case, async: true
-  doctest F4Hack.Hacker
+  doctest FalloutHacker.Core
 
-  alias F4Hack.Hacker
+  alias FalloutHacker.Core
 
   setup do
-    pid = Hacker.new()
+    pid = Core.new()
     %{pid: pid}
   end
 
@@ -17,21 +17,18 @@ defmodule F4Hack.HackerTest do
 
   describe "Hacker.set_words/2" do
     test "returns error when words have unequal length", %{pid: pid} do
-      assert Hacker.set_words(pid, "hello hi") == {:error, :unequal_length}
+      assert Core.set_words(pid, "hello hi") == {:error, :unequal_length}
     end
 
     test "returns remaining words when words have equal length", %{pid: pid} do
-      assert Hacker.set_words(pid, "hello howdy") == ["HELLO", "HOWDY"]
+      assert Core.set_words(pid, "hello howdy") == ["HELLO", "HOWDY"]
     end
   end
 
   describe "Hacker.get_guess/1" do
     test "returns password when only one possible word", %{pid: pid} do
-      Hacker.set_words(pid, "hello")
-      assert Hacker.get_guess(pid) == {:password, "HELLO"}
+      Core.set_words(pid, "hello")
+      assert Core.get_guess(pid) == {:password, "HELLO"}
     end
-
-
   end
-
 end

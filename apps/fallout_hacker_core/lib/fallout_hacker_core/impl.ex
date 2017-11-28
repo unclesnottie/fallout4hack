@@ -1,9 +1,9 @@
-defmodule F4Hack.Hacker.Impl do
+defmodule FalloutHacker.Core.Impl do
   @moduledoc """
-  Documentation for F4Hack.Hacker.Impl.
+  Documentation for FalloutHacker.Core.Impl.
   """
 
-  alias F4Hack.Hacker.Attempt
+  alias FalloutHacker.Core.Attempt
 
   def initialize_word_list(words) do
     word_list = words
