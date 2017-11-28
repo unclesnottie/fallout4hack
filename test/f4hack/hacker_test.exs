@@ -5,7 +5,7 @@ defmodule F4Hack.HackerTest do
   alias F4Hack.Hacker
 
   setup do
-    {:ok, pid} = Hacker.start_link()
+    pid = Hacker.new()
     %{pid: pid}
   end
 
@@ -17,11 +17,11 @@ defmodule F4Hack.HackerTest do
 
   describe "Hacker.set_words/2" do
     test "returns error when words have unequal length", %{pid: pid} do
-      assert Hacker.set_words(pid, "hello hi") == :error_unequal_length
+      assert Hacker.set_words(pid, "hello hi") == {:error, :unequal_length}
     end
 
     test "returns remaining words when words have equal length", %{pid: pid} do
-      assert Hacker.set_words(pid, "hello howdy") == {:remaining_words, "HELLO HOWDY"}
+      assert Hacker.set_words(pid, "hello howdy") == ["HELLO", "HOWDY"]
     end
   end
 
@@ -31,7 +31,7 @@ defmodule F4Hack.HackerTest do
       assert Hacker.get_guess(pid) == {:password, "HELLO"}
     end
 
-    
+
   end
 
 end

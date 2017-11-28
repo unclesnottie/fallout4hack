@@ -7,11 +7,11 @@ defmodule F4Hack do
 
 def main(_args) do
   words = IO.gets("Enter possible passwords:  ")
-  {:ok, pid} = Hacker.start_link()
+  pid = Hacker.new()
   case Hacker.set_words(pid, words) do
-    {:remaining_words, _} ->
+    [_ | _] ->
       hack_password(pid)
-    :error_unequal_length ->
+    {:error, :unequal_length} ->
       IO.puts("Words must all be the same length.")
       main(:ok)
   end
@@ -26,14 +26,14 @@ defp hack_password(pid) do
     |> to_int()
 
     case Hacker.set_likeness(pid, likeness) do
-      :out_of_tries ->
+      {:error, :out_of_tries} ->
         IO.puts("You ran out of tries.")
 
       {:password, password} ->
         IO.puts("The password is \"#{password}\".")
 
-      {:remaining_words, remaining_words} ->
-        IO.puts("The remaining words are \"#{remaining_words}\".")
+      remaining_words = [_ | _] ->
+        IO.puts("The remaining words are \"#{Enum.join(remaining_words, " ")}\".")
         hack_password(pid)
     end
 
