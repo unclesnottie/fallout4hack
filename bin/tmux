@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+#
+# tmux Script
+#
+# bin/tmux:  Open tmux with windows for a full dev environment.
+
+set -e
+
+TMUX_SESS=fallhack-dev
+
+cd "$(dirname "$0")/.."
+
+# Create tmux session
+tmux new -s $TMUX_SESS -n $(pwd) -d
+
+# Rename bash window
+tmux rename-window -t "$TMUX_SESS:1" "bash"
+
+# Open a vim window
+tmux new-window -t "$TMUX_SESS:2" -n "vim" "vim $(pwd)"
+
+# Open a test window
+tmux new-window -t "$TMUX_SESS:3" -n "test" "mix test.watch"
+
+# Open a bash window
+# tmux new-window -t "$TMUX_SESS:3" -n "bash"
+
+# Select vim window
+tmux select-window -t:2
+
+# Attach to tmux session
+tmux attach -t $TMUX_SESS
+
