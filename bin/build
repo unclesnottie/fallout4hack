@@ -11,8 +11,12 @@ cd "$(dirname "$0")/.."
 # Ensure everything in the app is up to date.
 bin/update
 
-echo "Buiding application..."
+echo "Buiding CLI application..."
+
+cd apps/fallout_hacker_cli
 
 # Run the main function
 mix escript.build
+
+cd ../..
  
