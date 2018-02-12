@@ -6,9 +6,34 @@
 
 set -e
 
+MISSING=0
+RED='\033[0;31m'
+#GREEN='\033[0;32m'
+NC='\033[0m' # No Color
+
 TMUX_SESS=fallhack-dev
 
 cd "$(dirname "$0")/.."
+
+command -v tmux >/dev/null 2>&1 || {
+  echo -e "${RED}This app requires tmux, but it was not found on your system.${NC}"
+  MISSING=$((MISSING + 1))
+}
+
+command -v vim >/dev/null 2>&1 || {
+  echo -e "${RED}This app requires vim, but it was not found on your system.${NC}"
+  MISSING=$((MISSING + 1))
+}
+
+command -v mix >/dev/null 2>&1 || {
+  echo -e "${RED}This app requires mix, but it was not found on your system.${NC}"
+  MISSING=$((MISSING + 1))
+}
+
+if [ $MISSING -gt 0 ]
+then
+  exit 1
+fi
 
 # Create tmux session
 tmux new -s $TMUX_SESS -n $(pwd) -d
@@ -21,9 +46,6 @@ tmux new-window -t "$TMUX_SESS:2" -n "vim" "vim $(pwd)"
 
 # Open a test window
 tmux new-window -t "$TMUX_SESS:3" -n "test" "mix test.watch"
-
-# Open a bash window
-# tmux new-window -t "$TMUX_SESS:3" -n "bash"
 
 # Select vim window
 tmux select-window -t:2
