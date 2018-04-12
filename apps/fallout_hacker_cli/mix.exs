@@ -11,8 +11,8 @@ defmodule FalloutHacker.CLI.Mixfile do
       lockfile: "../../mix.lock",
       elixir: "~> 1.6",
       escript: [main_module: FalloutHacker.CLI],
-      build_embedded: Mix.env == :prod,
-      start_permanent: Mix.env == :prod,
+      build_embedded: Mix.env() == :prod,
+      start_permanent: Mix.env() == :prod,
       deps: deps()
     ]
   end
@@ -27,7 +27,7 @@ defmodule FalloutHacker.CLI.Mixfile do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:fallout_hacker_core, in_umbrella: true},
+      {:fallout_hacker_core, in_umbrella: true}
     ]
   end
 end

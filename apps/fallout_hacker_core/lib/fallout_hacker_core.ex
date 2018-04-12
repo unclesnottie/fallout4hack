@@ -21,5 +21,4 @@ defmodule FalloutHacker.Core do
   def set_likeness(pid, likeness) do
     GenServer.call(pid, {:likeness, likeness})
   end
-
 end

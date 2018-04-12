@@ -11,12 +11,16 @@ defmodule FalloutHacker.Core.ImplTest do
     end
 
     test "returns remaining words when words have equal length" do
-      expected = {:ok, %Attempt{tries: 0, guess: nil, password: nil, words: ["HELLO", "HOWDY"], length: 5}}
+      expected =
+        {:ok, %Attempt{tries: 0, guess: nil, password: nil, words: ["HELLO", "HOWDY"], length: 5}}
+
       assert Impl.initialize_word_list("hello howdy") == expected
     end
 
     test "splits on all non-word characters" do
-      expected = {:ok, %Attempt{tries: 0, guess: nil, password: nil, words: ["A", "B"], length: 1}}
+      expected =
+        {:ok, %Attempt{tries: 0, guess: nil, password: nil, words: ["A", "B"], length: 1}}
+
       assert Impl.initialize_word_list("a~`!@#$%^&*()-+=[]{}|\\:;'\"?/,.<>b") == expected
     end
   end
@@ -34,7 +38,12 @@ defmodule FalloutHacker.Core.ImplTest do
 
     test "makes and returns best guess when one guess is better" do
       {:ok, state} = Impl.initialize_word_list("cello howdy hello giver")
-      assert Impl.get_guess(state) == %{state | guess: "HELLO", words: ["CELLO", "HOWDY", "GIVER"]}
+
+      assert Impl.get_guess(state) == %{
+               state
+               | guess: "HELLO",
+                 words: ["CELLO", "HOWDY", "GIVER"]
+             }
     end
 
     test "returns best guess if guess was already calculated" do
@@ -73,7 +82,13 @@ defmodule FalloutHacker.Core.ImplTest do
     test "updates word list, guess and tries when multiple words remain" do
       {:ok, state} = Impl.initialize_word_list("hello howdy haunt")
       state = Impl.get_guess(state)
-      assert Impl.set_likeness(state, 1) == %{state | words: ["HOWDY", "HAUNT"], guess: nil, tries: 1}
+
+      assert Impl.set_likeness(state, 1) == %{
+               state
+               | words: ["HOWDY", "HAUNT"],
+                 guess: nil,
+                 tries: 1
+             }
     end
 
     test "set likeness to a score that does not exist" do
@@ -82,5 +97,4 @@ defmodule FalloutHacker.Core.ImplTest do
       assert Impl.set_likeness(state, 1) == {:error, :no_matching_likeness}
     end
   end
-
 end

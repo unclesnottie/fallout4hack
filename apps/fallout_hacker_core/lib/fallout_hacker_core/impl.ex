@@ -6,15 +6,17 @@ defmodule FalloutHacker.Core.Impl do
   alias FalloutHacker.Core.Attempt
 
   def initialize_word_list(words) do
-    word_list = words
-    |> String.upcase
-    |> String.split(~r/\W+/, trim: true)
+    word_list =
+      words
+      |> String.upcase()
+      |> String.split(~r/\W+/, trim: true)
 
-    word_length = word_list
-    |> hd
-    |> String.length
+    word_length =
+      word_list
+      |> hd
+      |> String.length()
 
-    if Enum.all?(word_list, fn(w) -> String.length(w) == word_length end) do
+    if Enum.all?(word_list, fn w -> String.length(w) == word_length end) do
       {:ok, %Attempt{words: word_list, length: word_length}}
     else
       {:error, :unequal_length}
@@ -39,19 +41,22 @@ defmodule FalloutHacker.Core.Impl do
     {:error, :out_of_tries}
   end
 
-  def set_likeness(state = %Attempt{guess: password, length: length}, likeness) when likeness >= length do
+  def set_likeness(state = %Attempt{guess: password, length: length}, likeness)
+      when likeness >= length do
     %{state | password: password}
   end
 
   def set_likeness(state = %Attempt{tries: tries, guess: guess, words: word_list}, likeness) do
-    new_word_list = word_list
-    |> Enum.filter(fn w ->
-      likeness == calc_likeness(w, guess)
-    end)
+    new_word_list =
+      word_list
+      |> Enum.filter(fn w ->
+        likeness == calc_likeness(w, guess)
+      end)
 
     case length(new_word_list) do
       0 ->
         {:error, :no_matching_likeness}
+
       1 ->
         %{state | password: hd(new_word_list)}
 
@@ -60,31 +65,30 @@ defmodule FalloutHacker.Core.Impl do
     end
   end
 
-
-
   ## Private Functions
 
   defp best_guess(words) do
-    {best_guess, _} = words
-    |> Enum.map(fn x ->
-      {x, calc_score(x, words)}
-    end)
-    |> Enum.sort(fn {_, a}, {_, b} -> a >= b end)
-    |> hd
+    {best_guess, _} =
+      words
+      |> Enum.map(fn x ->
+        {x, calc_score(x, words)}
+      end)
+      |> Enum.sort(fn {_, a}, {_, b} -> a >= b end)
+      |> hd
+
     best_guess
   end
 
   defp calc_score(word, words) do
     words
     |> Stream.map(&calc_likeness(&1, word))
-    |> Stream.uniq
-    |> Enum.count
+    |> Stream.uniq()
+    |> Enum.count()
   end
 
   defp calc_likeness(a, b) do
     Stream.zip(String.graphemes(a), String.graphemes(b))
     |> Stream.filter(fn {a, b} -> a == b end)
-    |> Enum.count
+    |> Enum.count()
   end
-
 end

@@ -68,5 +68,4 @@ defmodule FalloutHacker.Core.Server do
   defp reply_guess(state = %Attempt{guess: guess}) do
     {:reply, {:guess, guess}, state}
   end
-
 end
